@@ -13,6 +13,18 @@ public class BPCModel {
 	private String identifyType;
 
 	private String compareWith;
+	
+	private String IdentifyAttribute;
+	
+	
+
+	public String getIdentifyAttribute() {
+		return IdentifyAttribute;
+	}
+
+	public void setIdentifyAttribute(String identifyAttribute) {
+		IdentifyAttribute = identifyAttribute;
+	}
 
 	public String getSteps() {
 		return steps;
@@ -22,8 +34,11 @@ public class BPCModel {
 		super();
 	}
 
+	
+
 	public BPCModel(String steps, String action, String fieldName,
-			String fieldParameter, String identifyType, String compareWith) {
+			String fieldParameter, String identifyType, String compareWith,
+			String identifyAttribute) {
 		super();
 		this.steps = steps;
 		this.action = action;
@@ -31,6 +46,7 @@ public class BPCModel {
 		this.fieldParameter = fieldParameter;
 		this.identifyType = identifyType;
 		this.compareWith = compareWith;
+		IdentifyAttribute = identifyAttribute;
 	}
 
 	public void setSteps(String steps) {
