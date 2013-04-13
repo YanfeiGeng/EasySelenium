@@ -3,25 +3,20 @@ package com.easyselenium.parse;
 import java.util.List;
 
 public class ExcelModel {
+
+	private List<SheetModel> sheets = null;
 	
-	private List<String> header;
-	
-	private List<ExcelRow> body;
-
-	public List<String> getHeader() {
-		return header;
+	public ExcelModel(List<SheetModel> sheets) {
+		super();
+		this.sheets = sheets;
 	}
 
-	public void setHeader(List<String> header) {
-		this.header = header;
+	public List<SheetModel> getSheets() {
+		return sheets;
 	}
 
-	public List<ExcelRow> getBody() {
-		return body;
-	}
-
-	public void setBody(List<ExcelRow> body) {
-		this.body = body;
+	public void setSheets(List<SheetModel> sheets) {
+		this.sheets = sheets;
 	}
 	
 }
