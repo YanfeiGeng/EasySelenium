@@ -74,7 +74,11 @@ public class SeleniumCommandExecutor {
 					System.out.println("Execute BPC modole: " + tsi.getBPCName());
 					for(Step step : bpc.getSteps()){
 						System.out.println("Execute step: action - " + step.getAction() + " on " + step.getFieldName());
-						this.executeAction(step);
+						if(step.isNeedOrNot()){
+							this.executeAction(step);
+						} else {
+							step.setStatus(Step.Status.SKIP);
+						}
 						System.out.println("Execute step finished: action - " + step.getAction() + " on " + step.getFieldName());
 					}
 				}
@@ -122,6 +126,7 @@ public class SeleniumCommandExecutor {
 				case Click:
 					this.getEl(step);
 					this.el.click();
+					result = true;
 					Thread.sleep(1000);
 					break;
 				case SendKeys:
@@ -139,7 +144,7 @@ public class SeleniumCommandExecutor {
 				case GetText:
 					this.getEl(step);
 					this.data.put(pm.getParameterName(), this.el.getText());
-					System.out.println("Text() is: " + this.el.getText());
+					result = true;
 					break;
 				case Verify:
 					String aValue = this.data.get(pm.getParameterName());
@@ -149,10 +154,10 @@ public class SeleniumCommandExecutor {
 					}
 					result = aValue.equalsIgnoreCase(bValue);
 					break;
-					
 				case WaitFor:
 					String avalue = this.data.get(pm.getParameterName());
 					long waitTime = new Long(avalue);
+					result = true;
 					Thread.sleep(waitTime*1000);
 					break;
 				default:
@@ -162,7 +167,7 @@ public class SeleniumCommandExecutor {
 			e.printStackTrace();
 			reason = e.getMessage();
 		} finally {
-			step.setStatus(result);
+			step.setStatus(result?Step.Status.PASS:Step.Status.FAIL);
 			step.setReason(reason);
 		}
 		return result;

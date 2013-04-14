@@ -23,6 +23,8 @@ public class ReportManager {
 	
 	private StringBuffer report = new StringBuffer();
 	
+	private StringBuffer hideMsg = new StringBuffer();
+	
 	public void generateReport() throws Exception{
 		ConfigurationResource res = ConfigurationResource.instance();
 		for(TestSuiteItem item : res.getSuite().getItems()){
@@ -36,17 +38,15 @@ public class ReportManager {
 				BPCModel bpc = res.getBpcs().get(script.getBPCName());
 				report.append(this.stepPrefix);
 				for(Step step : bpc.getSteps()){
-					report.append("<div>")
+					report.append(nameStyle())
 						.append(step.getAction())
 						.append(": ")
 						.append(step.getStep())
 						.append("</div>")
-						.append("<div>")
-						.append(step.status())
-						.append("</div>");
-					if(step.status()){
+						.append(style(step));
+					if(Step.Status.PASS.equals(step.getStatus())){
 						passed++;
-					} else {
+					} else if(Step.Status.FAIL.equals(step.getStatus())){
 						failed++;
 					}
 				}
@@ -55,6 +55,34 @@ public class ReportManager {
 			report.append("</fieldset>");
 		}
 		this.output();
+	}
+	
+	private String nameStyle(){
+		if((this.passed + this.failed)%2 == 1){
+			return "<div><div class='step_name odd'>";
+		} else {
+			return "<div><div class='step_name even'>";
+		}
+	}
+	
+	private String stepP = "<div class='STATUS'>";
+	private String stepS = "</div></div>";
+	private String style(Step s){
+		if(Step.Status.FAIL.equalsIgnoreCase(s.getStatus())){
+			String id = String.valueOf(System.currentTimeMillis());
+			String c = "<div class='fail' onclick='error(\"" 
+					+ id 
+					+ "\")'>" 
+					+ s.getStatus() 
+					+ "</div></div>"
+					+ this.hideMessage(id, s.getReason());
+			return c;
+		}
+		return stepP.replaceAll("STATUS", s.getStatus().toLowerCase()) + s.getStatus() + stepS;
+	}
+	
+	private String hideMessage(String id, String msg){
+		return "<div id='" + id + "' style='display:none;'>" + msg + "</div>";
 	}
 	
 	public String template() throws Exception{

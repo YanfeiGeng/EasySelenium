@@ -4,6 +4,12 @@ import com.easyselenium.selenium.ActionType;
 import com.easyselenium.selenium.IdentifyType;
 
 public class Step {
+	
+	public interface Status{
+		String FAIL = "FAIL";
+		String PASS = "PASS";
+		String SKIP = "SKIP";
+	}
 
 	private boolean needOrNot;
 	
@@ -24,7 +30,7 @@ public class Step {
 	/**
 	 * Below fields used for report.
 	 */
-	private boolean status;
+	private String status;
 	
 	private String reason;
 
@@ -112,14 +118,6 @@ public class Step {
 		this.identifyType = identifyType;
 	}
 
-	public boolean status() {
-		return status;
-	}
-
-	public void setStatus(boolean status) {
-		this.status = status;
-	}
-
 	public String getReason() {
 		return reason;
 	}
@@ -127,5 +125,15 @@ public class Step {
 	public void setReason(String reason) {
 		this.reason = reason;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+	
+	
 	
 }
