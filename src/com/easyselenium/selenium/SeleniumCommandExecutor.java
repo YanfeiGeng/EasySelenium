@@ -84,9 +84,9 @@ public class SeleniumCommandExecutor {
 						System.out.println("Execute step finished: action - " + step.getAction() + " on " + step.getFieldName());
 					}
 				}
+				this.driver.quit();
 			}
 			System.out.println("Suite executed successfully!");
-			this.driver.close();
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -148,6 +148,12 @@ public class SeleniumCommandExecutor {
 					bValue = this.data.get(comp.getParameterName());
 				}
 				result = aValue.equalsIgnoreCase(bValue);
+				break;
+				
+			case WaitFor:
+				String avalue = this.data.get(pm.getParameterName());
+				long waitTime = new Long(avalue);
+				Thread.sleep(waitTime*1000);
 				break;
 			default:
 				break;

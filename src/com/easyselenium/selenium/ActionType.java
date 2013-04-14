@@ -14,7 +14,8 @@ public enum ActionType {
 	Click("Click"),
 	GetAttribute("GetAttribute"),
 	GetText("GetText"),
-	Verify("Verify");
+	Verify("Verify"),
+	WaitFor("WaitFor");
 	
 	private String name;
 	
@@ -26,6 +27,7 @@ public enum ActionType {
 		types.put("GetAttribute", GetAttribute);
 		types.put("GetText", GetText);
 		types.put("Verify", Verify);
+		types.put("WaitFor", WaitFor);
 	}
 	
 	ActionType(String name){
