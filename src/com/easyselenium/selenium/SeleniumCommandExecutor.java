@@ -1,36 +1,22 @@
 package com.easyselenium.selenium;
 
-import org.openqa.selenium.WebDriver;
+import java.util.Map;
 
 import com.easyselenium.model.BPCModel;
+import com.easyselenium.model.Step;
+import com.easyselenium.model.TestScript;
+import com.easyselenium.model.TestScriptItem;
+import com.easyselenium.model.TestSuite;
+import com.easyselenium.model.TestSuiteItem;
+import com.easyselenium.parse.ModelParsor;
 
 public class SeleniumCommandExecutor {
 	
 	private BPCModel bpc;
-	
-	private WebDriver driver;
-	
-	
 
-	public SeleniumCommandExecutor(BPCModel bpc, WebDriver driver) {
+	public SeleniumCommandExecutor() {
 		super();
-		this.bpc = bpc;
-		this.driver = driver;
 	}
-
-	
-	
-	public WebDriver getDriver() {
-		return driver;
-	}
-
-
-
-	public void setDriver(WebDriver driver) {
-		this.driver = driver;
-	}
-
-
 
 	public BPCModel getBpc() {
 		return bpc;
@@ -40,14 +26,31 @@ public class SeleniumCommandExecutor {
 		this.bpc = bpc;
 	}
 	
-	public boolean executeCommand(){
-		
-//		String action = this.bpc.getAction();
-//		String identifyType = this.bpc.getIdentifyType();
-//		String identifyAttribute = this.bpc.getIdentifyAttribute();
-		
-		
-		return false;
+	public void executeCommand(){
+		try {
+			String path = "C:\\ws\\selenium\\EasySelenium\\Template";
+			ModelParsor parsor = new ModelParsor(path);
+			TestSuite suite = parsor.getTestSuite();
+			Map<String, TestScript> scripts = parsor.getTestScripts();
+			Map<String, BPCModel> bpcs = parsor.getBPCModel();
+			for(TestSuiteItem item : suite.getItems()){
+				System.out.println("Execute suite module: " + item.getModule());
+				TestScript script = scripts.get(item.getTsName());
+				for(TestScriptItem tsi : script.getScripts()){
+					BPCModel bpc = bpcs.get(tsi.getBPCName());
+					System.out.println("Execute BPC modole: " + tsi.getBPCName());
+					for(Step step : bpc.getSteps()){
+						System.out.println("Execute step: action - " + step.getAction() + " on " + step.getFieldName());
+					}
+				}
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String[] args){
+		new SeleniumCommandExecutor().executeCommand();
 	}
 
 }

@@ -8,7 +8,7 @@ public class Step {
 
 	private String fieldName;
 
-	private String fieldParameter;
+	private Parameter fieldParameter;
 
 	private String identifyType;
 
@@ -36,7 +36,7 @@ public class Step {
 	
 
 	public Step(String steps, String action, String fieldName,
-			String fieldParameter, String identifyType, String compareWith,
+			Parameter fieldParameter, String identifyType, String compareWith,
 			String identifyAttribute) {
 		super();
 		this.step = steps;
@@ -68,11 +68,11 @@ public class Step {
 		this.fieldName = fieldName;
 	}
 
-	public String getFieldParameter() {
+	public Parameter getFieldParameter() {
 		return fieldParameter;
 	}
 
-	public void setFieldParameter(String fieldParameter) {
+	public void setFieldParameter(Parameter fieldParameter) {
 		this.fieldParameter = fieldParameter;
 	}
 

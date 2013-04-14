@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -58,6 +59,7 @@ public class ExcelReader {
 				XSSFRow xRow = sheet.getRow(row);
 				List<String> cells = new ArrayList<String>();
 				for(int cell = 0; cell < xRow.getLastCellNum(); cell++){
+					xRow.getCell(cell).setCellType(Cell.CELL_TYPE_STRING);
 					cells.add(xRow.getCell(cell).getStringCellValue());
 				}
 				if(row == 0){

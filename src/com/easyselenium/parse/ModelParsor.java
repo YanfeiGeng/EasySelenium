@@ -8,6 +8,7 @@ import java.util.Map;
 
 import com.easyselenium.model.BPCModel;
 import com.easyselenium.model.DataItem;
+import com.easyselenium.model.Parameter;
 import com.easyselenium.model.Step;
 import com.easyselenium.model.TestScript;
 import com.easyselenium.model.TestScriptItem;
@@ -43,6 +44,11 @@ public class ModelParsor {
 				List<TestSuiteItem> items = new ArrayList<TestSuiteItem>();
 				for(RowModel row : excel.getSheets().get(0).getBody()){
 					List<String> v = row.getCells();
+					if(this.isEmpty(this.getValue(v, 2))){
+						//If TS_Name, then do not create a new test suite item, as this
+						//name is required
+						continue;
+					}
 					TestSuiteItem item = new TestSuiteItem();
 					item.setNeedOrNot(toBoolean(getValue(v, 0)));
 					item.setModule(getValue(v, 1));
@@ -65,8 +71,9 @@ public class ModelParsor {
 	 * @return
 	 * @throws Exception 
 	 */
-	public TestScript getTestScripts() throws Exception{
+	public Map<String, TestScript> getTestScripts() throws Exception{
 		File[] scriptFiles = this.file.getTestScripts();
+		Map<String, TestScript> allScripts = new HashMap<String, TestScript>();
 		for(File script : scriptFiles){
 			ExcelReader reader = new ExcelReader(script);
 			ExcelModel excel = reader.loadExcel();
@@ -75,9 +82,12 @@ public class ModelParsor {
 			//TODO Validate header
 			for(int i = 0; i < excel.getSheets().size(); i++){
 				if(i == 0){
-					
 					for(RowModel row : excel.getSheets().get(i).getBody()){
 						List<String> v = row.getCells();
+						if(this.isEmpty(this.getValue(v, 1))){
+							//BPC Name is required, or else no new item create
+							continue;
+						}
 						TestScriptItem singleScript = new TestScriptItem();
 						singleScript.setNeedOrNot(this.toBoolean(getValue(v, 0)));
 						singleScript.setBPCName(getValue(v, 1));
@@ -86,17 +96,20 @@ public class ModelParsor {
 					}
 				} else {
 					Map<String, String> keyV = new HashMap<String, String>();
-					List<String> keys = excel.getSheets().get(i).getHeader();
-					List<String> vals = excel.getSheets().get(i).getBody().get(0).getCells(); //By default, it at least have 2nd row.
-					for(int k = 0; k < keys.size(); k++){
-						keyV.put(getValue(keys,k), getValue(vals,k));
+					SheetModel st = excel.getSheets().get(i);
+					if(!st.getHeader().isEmpty() && !st.getBody().isEmpty()){
+						List<String> keys = excel.getSheets().get(i).getHeader();
+						List<String> vals = excel.getSheets().get(i).getBody().get(0).getCells(); //By default, it at least have 2nd row.
+						for(int k = 0; k < keys.size(); k++){
+							keyV.put(getValue(keys,k), getValue(vals,k));
+						}
+						sheetData.put(excel.getSheets().get(i).getName(), new DataItem(keyV));
 					}
-					sheetData.put(excel.getSheets().get(i).getName(), new DataItem(keyV));
 				}
 			}
-			return new TestScript(items, sheetData);
+			allScripts.put(this.getName(script.getName()), new TestScript(items, sheetData));
 		}
-		return null;
+		return allScripts;
 	}
 	
 	/**
@@ -104,26 +117,30 @@ public class ModelParsor {
 	 * @return
 	 * @throws Exception 
 	 */
-	public List<BPCModel> getBPCModel() throws Exception{
+	public Map<String, BPCModel> getBPCModel() throws Exception{
 		File[] scriptFiles = this.file.getBPC();
-		List<BPCModel> bpcs = new ArrayList<BPCModel>();
+		Map<String, BPCModel> bpcs = new HashMap<String, BPCModel>();
 		for(File bpcFile : scriptFiles){
 			ExcelReader reader = new ExcelReader(bpcFile);
 			ExcelModel excel = reader.loadExcel();
 			List<Step> steps = new ArrayList<Step>();
 			//By default, load the fist sheet
 			for(RowModel rows : excel.getSheets().get(0).getBody()){
+				if(this.isEmpty(this.getValue(rows.getCells(), 2))){
+					//If field name is empty, no step created.
+					continue;
+				}
 				Step step = new Step();
 				step.setStep(getValue(rows.getCells(), 0));
 				step.setAction(getValue(rows.getCells(), 1));
 				step.setFieldName(getValue(rows.getCells(), 2));
-				step.setFieldParameter(getValue(rows.getCells(), 3));
+				step.setFieldParameter(new Parameter(getValue(rows.getCells(), 3)));
 				step.setIdentifyType(getValue(rows.getCells(), 4));
 				step.setIdentifyAttribute(getValue(rows.getCells(), 5));
 				step.setCompareWith(getValue(rows.getCells(), 6));
 				steps.add(step);
 			}
-			bpcs.add(new BPCModel(steps));
+			bpcs.put(this.getName(bpcFile.getName()), new BPCModel(steps));
 		}
 		return bpcs;
 	}
@@ -141,6 +158,14 @@ public class ModelParsor {
 			return false;
 		} else {
 			return "yes".equalsIgnoreCase(v)?true:false;
+		}
+	}
+	
+	private String getName(String n){
+		if(this.isEmpty(n)){
+			return "";
+		} else {
+			return n.substring(0, n.indexOf("."));
 		}
 	}
 	

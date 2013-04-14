@@ -7,8 +7,18 @@ package com.easyselenium.selenium;
  */
 
 public enum ActionType {
-	SendKeys,
-	Click,
-	GetValue,
-	Verify
+	SendKeys("SendKeys"),
+	Click("Click"),
+	GetValue("GetValue"),
+	Verify("Verify");
+	
+	private String name;
+	
+	ActionType(String name){
+		this.name = name;
+	}
+	
+	public String getName(){
+		return this.name;
+	}
 }
