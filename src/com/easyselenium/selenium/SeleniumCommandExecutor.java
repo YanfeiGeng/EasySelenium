@@ -65,7 +65,7 @@ public class SeleniumCommandExecutor {
 	
 	public void executeCommand(){
 		try {
-			String path = "C:\\ws\\selenium\\EasySelenium\\Template";
+			String path = "D:\\Study\\Selenuim\\ws\\EasySelenium\\Template";
 			ModelParsor parsor = new ModelParsor(path);
 			TestSuite suite = parsor.getTestSuite();
 			Map<String, TestScript> scripts = parsor.getTestScripts();
@@ -86,6 +86,7 @@ public class SeleniumCommandExecutor {
 				}
 			}
 			System.out.println("Suite executed successfully!");
+			this.driver.close();
 		} catch (Exception e){
 			e.printStackTrace();
 		}
