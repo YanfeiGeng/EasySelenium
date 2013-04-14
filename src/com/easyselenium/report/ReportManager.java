@@ -22,9 +22,7 @@ public class ReportManager {
 	private int passed = 0, failed = 0;
 	
 	private StringBuffer report = new StringBuffer();
-	
-	private StringBuffer hideMsg = new StringBuffer();
-	
+		
 	public void generateReport() throws Exception{
 		ConfigurationResource res = ConfigurationResource.instance();
 		for(TestSuiteItem item : res.getSuite().getItems()){
@@ -108,6 +106,5 @@ public class ReportManager {
 		writer.flush();
 		writer.close();
 	}
-	
 	
 }
