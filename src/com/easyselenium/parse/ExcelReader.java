@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.poi.openxml4j.opc.OPCPackage;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -14,23 +15,28 @@ public class ExcelReader {
 	
 	private List<XSSFSheet> sheets = null;
 	
-	private SheetModel excelModel = null;
+	private ExcelModel excelModel = null;
 	
+	private File file = null;
+	
+	public ExcelReader(File file){
+		this.file = file;
+	}
 	
 	/**
 	 * Return the java represented Excel object
 	 */
-	public SheetModel loadExcel(String file){
+	public ExcelModel loadExcel(){
 		try {
-//			this.excel = WorkbookFactory.create(new FileInputStream(file));
-			OPCPackage pkg = OPCPackage.open(new File("file.xlsx"));
+			OPCPackage pkg = OPCPackage.open(file);
 			this.excel = new XSSFWorkbook(pkg);
 			this.initSheets(); 
 			this.initExcelModel();
 		} catch (Exception e) {
 			System.err.println("Failed to load the Excel file with path:" + file);
+			e.printStackTrace();
 		}
-		return null;
+		return excelModel;
 	}
 	
 	private void initSheets(){
@@ -41,27 +47,44 @@ public class ExcelReader {
 	}
 	
 	private void initExcelModel(){
+		System.out.println("Start to Load..");
+		List<SheetModel> sheetModels = new ArrayList<SheetModel>();
 		// Init each excel
 		for(XSSFSheet sheet : this.sheets){
+			List<String> header = new ArrayList<String>();
+			List<RowModel> body = new ArrayList<RowModel>();
 			//Create a new SheetModel
-			for(int row = 1; row <= sheet.getLastRowNum(); ){
-				
+			for(int row = 0; row < sheet.getLastRowNum(); row++){
+				XSSFRow xRow = sheet.getRow(row);
+				List<String> cells = new ArrayList<String>();
+				for(int cell = 0; cell < xRow.getLastCellNum(); cell++){
+					cells.add(xRow.getCell(cell).getStringCellValue());
+				}
+				if(row == 0){
+					header = cells;
+				} else {
+					body.add(new RowModel(cells));
+				}
 			}
+			sheetModels.add(new SheetModel(sheet.getSheetName(), header, body));
 		}
+		this.excelModel = new ExcelModel(sheetModels);
+		System.out.println("Finshed to Load..");
 	}
 		
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		new ExcelReader(new File("C:\\ws\\selenium\\EasySelenium\\Template\\TestSuite\\TestSuite.xlsx"));
 		
 	}
 
-	public SheetModel getExcelModel() {
+	public ExcelModel getExcelModel() {
 		return excelModel;
 	}
 
-	public void setExcelModel(SheetModel excelModel) {
+	public void setExcelModel(ExcelModel excelModel) {
 		this.excelModel = excelModel;
 	}
 

@@ -4,6 +4,8 @@ import java.util.List;
 
 public class SheetModel {
 	
+	private String name;
+	
 	private List<String> header;
 	
 	private List<RowModel> body;
@@ -24,10 +26,19 @@ public class SheetModel {
 		this.body = body;
 	}
 
-	public SheetModel(List<String> header, List<RowModel> body) {
+	public SheetModel(String name, List<String> header, List<RowModel> body) {
 		super();
+		this.name = name;
 		this.header = header;
 		this.body = body;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 }

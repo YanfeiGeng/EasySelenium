@@ -42,9 +42,9 @@ public class SeleniumCommandExecutor {
 	
 	public boolean executeCommand(){
 		
-		String action = this.bpc.getAction();
-		String identifyType = this.bpc.getIdentifyType();
-		String identifyAttribute = this.bpc.getIdentifyAttribute();
+//		String action = this.bpc.getAction();
+//		String identifyType = this.bpc.getIdentifyType();
+//		String identifyAttribute = this.bpc.getIdentifyAttribute();
 		
 		
 		return false;

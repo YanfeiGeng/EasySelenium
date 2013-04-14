@@ -1,48 +1,33 @@
 package com.easyselenium.model;
 
+import java.util.List;
+import java.util.Map;
+
 public class TestScript {
-
-	private boolean needOrNot;
 	
-	private String BPCName;
-	
-	private String comments;
-
-	public boolean isNeedOrNot() {
-		return needOrNot;
-	}
-
-	public void setNeedOrNot(boolean needOrNot) {
-		this.needOrNot = needOrNot;
-	}
-
-	public String getBPCName() {
-		return BPCName;
-	}
-
-	public void setBPCName(String bPCName) {
-		BPCName = bPCName;
-	}
-
-	public String getComments() {
-		return comments;
-	}
-
-	public void setComments(String comments) {
-		this.comments = comments;
-	}
-
-	public TestScript(boolean needOrNot, String bPCName, String comments) {
+	public TestScript(List<TestScriptItem> scripts, Map<String, DataItem> data) {
 		super();
-		this.needOrNot = needOrNot;
-		BPCName = bPCName;
-		this.comments = comments;
+		this.scripts = scripts;
+		this.data = data;
 	}
 
-	public TestScript() {
-		super();
+	private List<TestScriptItem> scripts;
+	
+	private Map<String, DataItem> data;
+	
+	public List<TestScriptItem> getScripts() {
+		return scripts;
 	}
-	
-	
-	
+
+	public void setScripts(List<TestScriptItem> scripts) {
+		this.scripts = scripts;
+	}
+
+	public Map<String, DataItem> getData() {
+		return data;
+	}
+
+	public void setData(Map<String, DataItem> data) {
+		this.data = data;
+	}
 }

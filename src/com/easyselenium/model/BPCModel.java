@@ -1,96 +1,22 @@
 package com.easyselenium.model;
 
+import java.util.List;
+
 public class BPCModel {
 
-	private String steps;
+	private List<Step> steps = null;
 
-	private String action;
-
-	private String fieldName;
-
-	private String fieldParameter;
-
-	private String identifyType;
-
-	private String compareWith;
-	
-	private String IdentifyAttribute;
-	
-	
-
-	public String getIdentifyAttribute() {
-		return IdentifyAttribute;
-	}
-
-	public void setIdentifyAttribute(String identifyAttribute) {
-		IdentifyAttribute = identifyAttribute;
-	}
-
-	public String getSteps() {
+	public List<Step> getSteps() {
 		return steps;
 	}
 
-	public BPCModel() {
-		super();
-	}
-
-	
-
-	public BPCModel(String steps, String action, String fieldName,
-			String fieldParameter, String identifyType, String compareWith,
-			String identifyAttribute) {
-		super();
-		this.steps = steps;
-		this.action = action;
-		this.fieldName = fieldName;
-		this.fieldParameter = fieldParameter;
-		this.identifyType = identifyType;
-		this.compareWith = compareWith;
-		IdentifyAttribute = identifyAttribute;
-	}
-
-	public void setSteps(String steps) {
+	public void setSteps(List<Step> steps) {
 		this.steps = steps;
 	}
 
-	public String getAction() {
-		return action;
-	}
-
-	public void setAction(String action) {
-		this.action = action;
-	}
-
-	public String getFieldName() {
-		return fieldName;
-	}
-
-	public void setFieldName(String fieldName) {
-		this.fieldName = fieldName;
-	}
-
-	public String getFieldParameter() {
-		return fieldParameter;
-	}
-
-	public void setFieldParameter(String fieldParameter) {
-		this.fieldParameter = fieldParameter;
-	}
-
-	public String getIdentifyType() {
-		return identifyType;
-	}
-
-	public void setIdentifyType(String identifyType) {
-		this.identifyType = identifyType;
-	}
-
-	public String getCompareWith() {
-		return compareWith;
-	}
-
-	public void setCompareWith(String compareWith) {
-		this.compareWith = compareWith;
+	public BPCModel(List<Step> steps) {
+		super();
+		this.steps = steps;
 	}
 
 }
