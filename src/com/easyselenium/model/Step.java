@@ -1,20 +1,23 @@
 package com.easyselenium.model;
 
+import com.easyselenium.selenium.ActionType;
+import com.easyselenium.selenium.IdentifyType;
+
 public class Step {
 
 	private boolean needOrNot;
 	
 	private String step;
 
-	private String action;
+	private ActionType action;
 
 	private String fieldName;
 
 	private Parameter fieldParameter;
 
-	private String identifyType;
+	private IdentifyType identifyType;
 
-	private String compareWith;
+	private Parameter compareWith;
 	
 	private String IdentifyAttribute;
 		
@@ -35,8 +38,8 @@ public class Step {
 		super();
 	}
 
-	public Step(boolean needOrNot, String steps, String action, String fieldName,
-			Parameter fieldParameter, String identifyType, String compareWith,
+	public Step(boolean needOrNot, String steps, ActionType action, String fieldName,
+			Parameter fieldParameter, IdentifyType identifyType, Parameter compareWith,
 			String identifyAttribute) {
 		super();
 		this.needOrNot = needOrNot;
@@ -53,13 +56,6 @@ public class Step {
 		this.step = steps;
 	}
 
-	public String getAction() {
-		return action;
-	}
-
-	public void setAction(String action) {
-		this.action = action;
-	}
 
 	public String getFieldName() {
 		return fieldName;
@@ -77,19 +73,12 @@ public class Step {
 		this.fieldParameter = fieldParameter;
 	}
 
-	public String getIdentifyType() {
-		return identifyType;
-	}
 
-	public void setIdentifyType(String identifyType) {
-		this.identifyType = identifyType;
-	}
-
-	public String getCompareWith() {
+	public Parameter getCompareWith() {
 		return compareWith;
 	}
 
-	public void setCompareWith(String compareWith) {
+	public void setCompareWith(Parameter compareWith) {
 		this.compareWith = compareWith;
 	}
 
@@ -99,6 +88,22 @@ public class Step {
 
 	public void setNeedOrNot(boolean needOrNot) {
 		this.needOrNot = needOrNot;
+	}
+
+	public ActionType getAction() {
+		return action;
+	}
+
+	public void setAction(ActionType action) {
+		this.action = action;
+	}
+
+	public IdentifyType getIdentifyType() {
+		return identifyType;
+	}
+
+	public void setIdentifyType(IdentifyType identifyType) {
+		this.identifyType = identifyType;
 	}
 	
 }

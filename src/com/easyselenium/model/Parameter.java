@@ -4,6 +4,13 @@ public class Parameter {
 	
 	private String FieldParameter;
 	
+	
+	public boolean isCompareParam(){
+		if(this.FieldParameter.startsWith("$")){
+			return true;
+		}
+		return false;
+	}
 
 	public Parameter(String fieldParameter) {
 		super();
@@ -71,5 +78,9 @@ public class Parameter {
 			return names;
 		}
 		return null;
+	}
+	
+	public boolean isComplexParam(){
+		return this.FieldParameter.contains(":");
 	}
 }

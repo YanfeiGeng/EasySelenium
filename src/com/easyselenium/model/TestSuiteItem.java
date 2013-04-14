@@ -1,5 +1,7 @@
 package com.easyselenium.model;
 
+import com.easyselenium.selenium.BrowserType;
+
 public class TestSuiteItem {
 
 private boolean needOrNot = false;
@@ -10,12 +12,12 @@ private boolean needOrNot = false;
 	
 	private String comments;
 	
-	private String explorerType;
+	private BrowserType explorerType;
 	
 	private String applicationURL;
 
 	public TestSuiteItem(boolean needOrNot, String module, String tsName,
-			String comments, String explorerType, String applicationURL) {
+			String comments, BrowserType explorerType, String applicationURL) {
 		super();
 		this.needOrNot = needOrNot;
 		this.module = module;
@@ -61,13 +63,6 @@ private boolean needOrNot = false;
 		this.comments = comments;
 	}
 
-	public String getExplorerType() {
-		return explorerType;
-	}
-
-	public void setExplorerType(String explorerType) {
-		this.explorerType = explorerType;
-	}
 
 	public String getApplicationURL() {
 		return applicationURL;
@@ -75,6 +70,14 @@ private boolean needOrNot = false;
 
 	public void setApplicationURL(String applicationURL) {
 		this.applicationURL = applicationURL;
+	}
+
+	public BrowserType getExplorerType() {
+		return explorerType;
+	}
+
+	public void setExplorerType(BrowserType explorerType) {
+		this.explorerType = explorerType;
 	}
 	
 }

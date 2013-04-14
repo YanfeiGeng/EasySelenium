@@ -14,6 +14,9 @@ import com.easyselenium.model.TestScript;
 import com.easyselenium.model.TestScriptItem;
 import com.easyselenium.model.TestSuite;
 import com.easyselenium.model.TestSuiteItem;
+import com.easyselenium.selenium.ActionType;
+import com.easyselenium.selenium.BrowserType;
+import com.easyselenium.selenium.IdentifyType;
 import com.easyselenium.util.FileUtil;
 
 public class ModelParsor {
@@ -54,7 +57,7 @@ public class ModelParsor {
 					item.setModule(getValue(v, 1));
 					item.setTsName(getValue(v, 2));
 					item.setComments(getValue(v, 3));
-					item.setExplorerType(getValue(v, 4));
+					item.setExplorerType(BrowserType.getType(getValue(v, 4)));
 					item.setApplicationURL(getValue(v, 5));
 					items.add(item);
 				}
@@ -133,12 +136,12 @@ public class ModelParsor {
 				Step step = new Step();
 				step.setNeedOrNot(this.toBoolean(getValue(rows.getCells(), 0)));
 				step.setStep(getValue(rows.getCells(), 1));
-				step.setAction(getValue(rows.getCells(), 2));
+				step.setAction(ActionType.getType(getValue(rows.getCells(), 2)));
 				step.setFieldName(getValue(rows.getCells(), 3));
 				step.setFieldParameter(new Parameter(getValue(rows.getCells(), 4)));
-				step.setIdentifyType(getValue(rows.getCells(), 5));
+				step.setIdentifyType(IdentifyType.getType(getValue(rows.getCells(), 5)));
 				step.setIdentifyAttribute(getValue(rows.getCells(), 6));
-				step.setCompareWith(getValue(rows.getCells(), 7));
+				step.setCompareWith(new Parameter(getValue(rows.getCells(), 7)));
 				steps.add(step);
 			}
 			bpcs.put(this.getName(bpcFile.getName()), new BPCModel(steps));
