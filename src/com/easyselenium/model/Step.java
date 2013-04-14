@@ -20,7 +20,13 @@ public class Step {
 	private Parameter compareWith;
 	
 	private String IdentifyAttribute;
-		
+	
+	/**
+	 * Below fields used for report.
+	 */
+	private boolean status;
+	
+	private String reason;
 
 	public String getIdentifyAttribute() {
 		return IdentifyAttribute;
@@ -104,6 +110,22 @@ public class Step {
 
 	public void setIdentifyType(IdentifyType identifyType) {
 		this.identifyType = identifyType;
+	}
+
+	public boolean status() {
+		return status;
+	}
+
+	public void setStatus(boolean status) {
+		this.status = status;
+	}
+
+	public String getReason() {
+		return reason;
+	}
+
+	public void setReason(String reason) {
+		this.reason = reason;
 	}
 	
 }
