@@ -2,6 +2,8 @@ package com.easyselenium.model;
 
 public class Step {
 
+	private boolean needOrNot;
+	
 	private String step;
 
 	private String action;
@@ -33,12 +35,11 @@ public class Step {
 		super();
 	}
 
-	
-
-	public Step(String steps, String action, String fieldName,
+	public Step(boolean needOrNot, String steps, String action, String fieldName,
 			Parameter fieldParameter, String identifyType, String compareWith,
 			String identifyAttribute) {
 		super();
+		this.needOrNot = needOrNot;
 		this.step = steps;
 		this.action = action;
 		this.fieldName = fieldName;
@@ -90,6 +91,14 @@ public class Step {
 
 	public void setCompareWith(String compareWith) {
 		this.compareWith = compareWith;
+	}
+
+	public boolean isNeedOrNot() {
+		return needOrNot;
+	}
+
+	public void setNeedOrNot(boolean needOrNot) {
+		this.needOrNot = needOrNot;
 	}
 	
 }
