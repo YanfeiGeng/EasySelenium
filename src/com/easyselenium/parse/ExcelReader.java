@@ -55,17 +55,19 @@ public class ExcelReader {
 			List<String> header = new ArrayList<String>();
 			List<RowModel> body = new ArrayList<RowModel>();
 			//Create a new SheetModel
-			for(int row = 0; row < sheet.getLastRowNum(); row++){
+			for(int row = 0; row <= sheet.getLastRowNum(); row++){
 				XSSFRow xRow = sheet.getRow(row);
 				List<String> cells = new ArrayList<String>();
-				for(int cell = 0; cell < xRow.getLastCellNum(); cell++){
-					xRow.getCell(cell).setCellType(Cell.CELL_TYPE_STRING);
-					cells.add(xRow.getCell(cell).getStringCellValue());
-				}
-				if(row == 0){
-					header = cells;
-				} else {
-					body.add(new RowModel(cells));
+				if(null != xRow){
+					for(int cell = 0; cell < xRow.getLastCellNum(); cell++){
+						xRow.getCell(cell).setCellType(Cell.CELL_TYPE_STRING);
+						cells.add(xRow.getCell(cell).getStringCellValue());
+					}
+					if(row == 0){
+						header = cells;
+					} else {
+						body.add(new RowModel(cells));
+					}
 				}
 			}
 			sheetModels.add(new SheetModel(sheet.getSheetName(), header, body));

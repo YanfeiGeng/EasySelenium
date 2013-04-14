@@ -13,6 +13,7 @@ public enum ActionType {
 	SendKeys("SendKeys"),
 	Click("Click"),
 	GetAttribute("GetAttribute"),
+	GetText("GetText"),
 	Verify("Verify");
 	
 	private String name;
@@ -23,6 +24,7 @@ public enum ActionType {
 		types.put("SendKeys", SendKeys);
 		types.put("Click", Click);
 		types.put("GetAttribute", GetAttribute);
+		types.put("GetText", GetText);
 		types.put("Verify", Verify);
 	}
 	

@@ -26,6 +26,10 @@ public class SeleniumCommandExecutor {
 	
 	private WebElement el;
 	
+	private TestScript ts;
+	
+	private Map<String, String> data;
+	
 	public SeleniumCommandExecutor() {
 		super();
 	}
@@ -69,16 +73,19 @@ public class SeleniumCommandExecutor {
 			for(TestSuiteItem item : suite.getItems()){
 				System.out.println("Execute suite module: " + item.getModule());
 				this.initDriver(item);
-				TestScript script = scripts.get(item.getTsName());
-				for(TestScriptItem tsi : script.getScripts()){
+				this.ts = scripts.get(item.getTsName());
+				for(TestScriptItem tsi : ts.getScripts()){
 					BPCModel bpc = bpcs.get(tsi.getBPCName());
+					this.data = this.ts.getData().get(tsi.getBPCName()).getKeyValue();
 					System.out.println("Execute BPC modole: " + tsi.getBPCName());
 					for(Step step : bpc.getSteps()){
 						System.out.println("Execute step: action - " + step.getAction() + " on " + step.getFieldName());
 						this.executeAction(step);
+						System.out.println("Execute step finished: action - " + step.getAction() + " on " + step.getFieldName());
 					}
 				}
 			}
+			System.out.println("Suite executed successfully!");
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -89,48 +96,55 @@ public class SeleniumCommandExecutor {
 		switch(step.getIdentifyType()){
 			case ById:
 				this.el = this.driver.findElement(By.id(step.getIdentifyAttribute()));
+				break;
 			case ByXpath:
 				this.el = this.driver.findElement(By.xpath(step.getIdentifyAttribute()));
+				break;
 			case ByName:
 				this.el = this.driver.findElement(By.name(step.getIdentifyAttribute()));
+				break;
 			case ByTagName:
 				this.el = this.driver.findElement(By.tagName(step.getIdentifyAttribute()));
+				break;
 			default:
 				break;
 		}
 	}
 	
 	
-	public boolean executeAction(Step step){
+	public boolean executeAction(Step step) throws InterruptedException{
 		boolean result = false;
-		this.getEl(step);
 		ActionType type = step.getAction();
 		Parameter pm = step.getFieldParameter();
 		Parameter comp = step.getCompareWith();
 		switch(type){
 			case Click:
+				this.getEl(step);
 				this.el.click();
+				Thread.sleep(1000);
 				break;
 			case SendKeys:
-				
+				this.getEl(step);
 				if(pm.isComplexParam()){
 					//TODO Make this complex field more accurate
-					this.el.sendKeys(DataCenter.operator().getValueByField(pm.getParameterNameComplex()[0]));
+					this.el.sendKeys(this.data.get(pm.getParameterNameComplex()[0]));
 				} else {
-					this.el.sendKeys(DataCenter.operator().getValueByField(pm.getParameterName()));
+					this.el.sendKeys(this.data.get(pm.getParameterName()));
 				}
 				result = true;
 				break;
 			case GetAttribute:
-				String value = this.el.getAttribute(step.getFieldName());
-				DataCenter.operator().putData(step.getFieldName(), value);
-				result = true;
+				break;
+			case GetText:
+				this.getEl(step);
+				this.data.put(pm.getParameterName(), this.el.getText());
+				System.out.println("Text() is: " + this.el.getText());
 				break;
 			case Verify:
-				String aValue = DataCenter.operator().getValueByField(pm.getParameterName());
+				String aValue = this.data.get(pm.getParameterName());
 				String bValue = comp.getFieldParameter();
 				if(comp.isCompareParam()){
-					bValue = DataCenter.operator().getValueByField(comp.getParameterName());
+					bValue = this.data.get(comp.getParameterName());
 				}
 				result = aValue.equalsIgnoreCase(bValue);
 				break;

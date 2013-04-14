@@ -129,7 +129,7 @@ public class ModelParsor {
 			List<Step> steps = new ArrayList<Step>();
 			//By default, load the fist sheet
 			for(RowModel rows : excel.getSheets().get(0).getBody()){
-				if(this.isEmpty(this.getValue(rows.getCells(), 3))){
+				if(this.isEmpty(this.getValue(rows.getCells(), 2))){
 					//If field name is empty, no step created.
 					continue;
 				}
