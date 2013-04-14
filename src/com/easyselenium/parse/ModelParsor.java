@@ -126,18 +126,19 @@ public class ModelParsor {
 			List<Step> steps = new ArrayList<Step>();
 			//By default, load the fist sheet
 			for(RowModel rows : excel.getSheets().get(0).getBody()){
-				if(this.isEmpty(this.getValue(rows.getCells(), 2))){
+				if(this.isEmpty(this.getValue(rows.getCells(), 3))){
 					//If field name is empty, no step created.
 					continue;
 				}
 				Step step = new Step();
-				step.setStep(getValue(rows.getCells(), 0));
-				step.setAction(getValue(rows.getCells(), 1));
-				step.setFieldName(getValue(rows.getCells(), 2));
-				step.setFieldParameter(new Parameter(getValue(rows.getCells(), 3)));
-				step.setIdentifyType(getValue(rows.getCells(), 4));
-				step.setIdentifyAttribute(getValue(rows.getCells(), 5));
-				step.setCompareWith(getValue(rows.getCells(), 6));
+				step.setNeedOrNot(this.toBoolean(getValue(rows.getCells(), 0)));
+				step.setStep(getValue(rows.getCells(), 1));
+				step.setAction(getValue(rows.getCells(), 2));
+				step.setFieldName(getValue(rows.getCells(), 3));
+				step.setFieldParameter(new Parameter(getValue(rows.getCells(), 4)));
+				step.setIdentifyType(getValue(rows.getCells(), 5));
+				step.setIdentifyAttribute(getValue(rows.getCells(), 6));
+				step.setCompareWith(getValue(rows.getCells(), 7));
 				steps.add(step);
 			}
 			bpcs.put(this.getName(bpcFile.getName()), new BPCModel(steps));
