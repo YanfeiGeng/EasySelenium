@@ -10,14 +10,12 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import com.easyselenium.model.BPCModel;
-import com.easyselenium.model.DataCenter;
 import com.easyselenium.model.Parameter;
 import com.easyselenium.model.Step;
 import com.easyselenium.model.TestScript;
 import com.easyselenium.model.TestScriptItem;
-import com.easyselenium.model.TestSuite;
 import com.easyselenium.model.TestSuiteItem;
-import com.easyselenium.parse.ModelParsor;
+import com.easyselenium.report.ReportManager;
 
 public class SeleniumCommandExecutor {
 	
@@ -66,28 +64,32 @@ public class SeleniumCommandExecutor {
 	
 	public void executeCommand(){
 		try {
-			String path = "D:\\Study\\Selenuim\\ws\\EasySelenium\\Template";
-			ModelParsor parsor = new ModelParsor(path);
-			TestSuite suite = parsor.getTestSuite();
-			Map<String, TestScript> scripts = parsor.getTestScripts();
-			Map<String, BPCModel> bpcs = parsor.getBPCModel();
-			for(TestSuiteItem item : suite.getItems()){
+			ConfigurationResource res = ConfigurationResource.instance();
+			for(TestSuiteItem item : res.getSuite().getItems()){
 				System.out.println("Execute suite module: " + item.getModule());
 				this.initDriver(item);
-				this.ts = scripts.get(item.getTsName());
+				this.ts = res.getScripts().get(item.getTsName());
 				for(TestScriptItem tsi : ts.getScripts()){
-					BPCModel bpc = bpcs.get(tsi.getBPCName());
+					BPCModel bpc = res.getBpcs().get(tsi.getBPCName());
 					this.data = this.ts.getData().get(tsi.getBPCName()).getKeyValue();
 					System.out.println("Execute BPC modole: " + tsi.getBPCName());
 					for(Step step : bpc.getSteps()){
 						System.out.println("Execute step: action - " + step.getAction() + " on " + step.getFieldName());
-						this.executeAction(step);
+						if(step.isNeedOrNot()){
+							this.executeAction(step);
+						} else {
+							step.setStatus(Step.Status.SKIP);
+						}
 						System.out.println("Execute step finished: action - " + step.getAction() + " on " + step.getFieldName());
 					}
 				}
 				this.driver.quit();
 			}
 			System.out.println("Suite executed successfully!");
+			/*************************[ Report Generation ]********************************/
+			ReportManager report = new ReportManager();
+			report.generateReport();
+			/*****************************[ End of report ]********************************/
 		} catch (Exception e){
 			e.printStackTrace();
 		}
@@ -114,52 +116,60 @@ public class SeleniumCommandExecutor {
 	}
 	
 	
-	public boolean executeAction(Step step) throws InterruptedException{
+	public boolean executeAction(Step step) {
 		boolean result = false;
-		ActionType type = step.getAction();
-		Parameter pm = step.getFieldParameter();
-		Parameter comp = step.getCompareWith();
-		switch(type){
-			case Click:
-				this.getEl(step);
-				this.el.click();
-				Thread.sleep(1000);
-				break;
-			case SendKeys:
-				this.getEl(step);
-				if(pm.isComplexParam()){
-					//TODO Make this complex field more accurate
-					this.el.sendKeys(this.data.get(pm.getParameterNameComplex()[0]));
-				} else {
-					this.el.sendKeys(this.data.get(pm.getParameterName()));
-				}
-				result = true;
-				break;
-			case GetAttribute:
-				break;
-			case GetText:
-				this.getEl(step);
-				this.data.put(pm.getParameterName(), this.el.getText());
-				System.out.println("Text() is: " + this.el.getText());
-				break;
-			case Verify:
-				String aValue = this.data.get(pm.getParameterName());
-				String bValue = comp.getFieldParameter();
-				if(comp.isCompareParam()){
-					bValue = this.data.get(comp.getParameterName());
-				}
-				result = aValue.equalsIgnoreCase(bValue);
-				break;
-				
-			case WaitFor:
-				String avalue = this.data.get(pm.getParameterName());
-				long waitTime = new Long(avalue);
-				//Thread.sleep(waitTime*1000);
-				
-				this.driver.manage().timeouts().implicitlyWait(waitTime, TimeUnit.SECONDS);
-				break;
-			default:
-				break;
+		String reason = "";
+		try{
+			ActionType type = step.getAction();
+			Parameter pm = step.getFieldParameter();
+			Parameter comp = step.getCompareWith();
+			switch(type){
+				case Click:
+					this.getEl(step);
+					this.el.click();
+					result = true;
+					Thread.sleep(1000);
+					break;
+				case SendKeys:
+					this.getEl(step);
+					if(pm.isComplexParam()){
+						//TODO Make this complex field more accurate
+						this.el.sendKeys(this.data.get(pm.getParameterNameComplex()[0]));
+					} else {
+						this.el.sendKeys(this.data.get(pm.getParameterName()));
+					}
+					result = true;
+					break;
+				case GetAttribute:
+					break;
+				case GetText:
+					this.getEl(step);
+					this.data.put(pm.getParameterName(), this.el.getText());
+					result = true;
+					break;
+				case Verify:
+					String aValue = this.data.get(pm.getParameterName());
+					String bValue = comp.getFieldParameter();
+					if(comp.isCompareParam()){
+						bValue = this.data.get(comp.getParameterName());
+					}
+					result = aValue.equalsIgnoreCase(bValue);
+					break;
+				case WaitFor:
+					String avalue = this.data.get(pm.getParameterName());
+					long waitTime = new Long(avalue);
+					result = true;
+					Thread.sleep(waitTime*1000);
+					break;
+				default:
+					break;
+			}
+		} catch (Exception e){
+			e.printStackTrace();
+			reason = e.getMessage();
+		} finally {
+			step.setStatus(result?Step.Status.PASS:Step.Status.FAIL);
+			step.setReason(reason);
 		}
 		return result;
 	}
