@@ -1,6 +1,7 @@
 package com.easyselenium.selenium;
 
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -153,7 +154,9 @@ public class SeleniumCommandExecutor {
 			case WaitFor:
 				String avalue = this.data.get(pm.getParameterName());
 				long waitTime = new Long(avalue);
-				Thread.sleep(waitTime*1000);
+				//Thread.sleep(waitTime*1000);
+				
+				this.driver.manage().timeouts().implicitlyWait(waitTime, TimeUnit.SECONDS);
 				break;
 			default:
 				break;
